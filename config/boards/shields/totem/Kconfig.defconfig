@@ -16,11 +16,10 @@ endif
 
 if SHIELD_TOTEM_LEFT
 
-# Wireless mode (no dongle, Prospector in scanner mode): the LEFT half is the
-# BLE split central that talks to the host; the right half is its peripheral.
-# For dongle mode this default is overridden to peripheral with the
-# -DCONFIG_ZMK_SPLIT_ROLE_CENTRAL=n cmake-arg (see build.yaml), so the Prospector
-# dongle becomes the central instead.
+# Wireless mode (no dongle): the LEFT half is the BLE split central that talks
+# to the host; the right half is its peripheral. For dongle mode this default
+# is overridden to peripheral with the -DCONFIG_ZMK_SPLIT_ROLE_CENTRAL=n
+# cmake-arg (see build.yaml), so the Prospector dongle becomes the central.
 config ZMK_KEYBOARD_NAME
     default "TOTEM"
 
