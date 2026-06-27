@@ -4,10 +4,10 @@ include:
   #  Left half is the BLE split CENTRAL (host-facing); right half is peripheral.
   #  Flash totem_left_central + totem_right_peripheral onto the two halves.
   # ==========================================================================
-  - board: xiao_ble//zmk
+  - board: xiao_ble/nrf52840/zmk
     shield: totem_left
     artifact-name: totem_left_central_wireless
-  - board: xiao_ble//zmk
+  - board: xiao_ble/nrf52840/zmk
     shield: totem_right
     artifact-name: totem_right_peripheral
 
@@ -17,11 +17,11 @@ include:
   #  USB HID. The cmake-arg overrides the left half's default central role.
   #  Flash totem_left_peripheral + totem_right_peripheral + the dongle image.
   # ==========================================================================
-  - board: xiao_ble//zmk
+  - board: xiao_ble/nrf52840/zmk
     shield: totem_left
     cmake-args: -DCONFIG_ZMK_SPLIT_ROLE_CENTRAL=n
     artifact-name: totem_left_peripheral_dongle
-  - board: xiao_ble//zmk
+  - board: xiao_ble/nrf52840/zmk
     shield: totem_dongle prospector_touch
     snippet: studio-rpc-usb-uart
     cmake-args: -DCONFIG_ZMK_STUDIO=y
@@ -31,5 +31,5 @@ include:
   #  Pairing reset  -  flash on every device before switching modes so the
   #  halves can re-bond to the new central.
   # ==========================================================================
-  - board: xiao_ble//zmk
+  - board: xiao_ble/nrf52840/zmk
     shield: settings_reset
