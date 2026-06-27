@@ -1,11 +1,35 @@
 include:
+  # ==========================================================================
+  #  WIRELESS MODE  -  no dongle / Prospector running in battery scanner mode.
+  #  Left half is the BLE split CENTRAL (host-facing); right half is peripheral.
+  #  Flash totem_left_central + totem_right_peripheral onto the two halves.
+  # ==========================================================================
   - board: xiao_ble//zmk
     shield: totem_left
+    artifact-name: totem_left_central_wireless
   - board: xiao_ble//zmk
     shield: totem_right
+    artifact-name: totem_right_peripheral
+
+  # ==========================================================================
+  #  DONGLE MODE  -  Prospector running in USB dongle mode (it is the central).
+  #  BOTH halves are peripherals; the Prospector dongle is the BLE central +
+  #  USB HID. The cmake-arg overrides the left half's default central role.
+  #  Flash totem_left_peripheral + totem_right_peripheral + the dongle image.
+  # ==========================================================================
+  - board: xiao_ble//zmk
+    shield: totem_left
+    cmake-args: -DCONFIG_ZMK_SPLIT_ROLE_CENTRAL=n
+    artifact-name: totem_left_peripheral_dongle
   - board: xiao_ble//zmk
     shield: totem_dongle prospector_touch
     snippet: studio-rpc-usb-uart
     cmake-args: -DCONFIG_ZMK_STUDIO=y
+    artifact-name: totem_dongle_prospector
+
+  # ==========================================================================
+  #  Pairing reset  -  flash on every device before switching modes so the
+  #  halves can re-bond to the new central.
+  # ==========================================================================
   - board: xiao_ble//zmk
     shield: settings_reset

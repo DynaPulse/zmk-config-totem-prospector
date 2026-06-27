@@ -14,6 +14,21 @@ config ZMK_USB
 
 endif
 
+if SHIELD_TOTEM_LEFT
+
+# Wireless mode (no dongle, Prospector in scanner mode): the LEFT half is the
+# BLE split central that talks to the host; the right half is its peripheral.
+# For dongle mode this default is overridden to peripheral with the
+# -DCONFIG_ZMK_SPLIT_ROLE_CENTRAL=n cmake-arg (see build.yaml), so the Prospector
+# dongle becomes the central instead.
+config ZMK_KEYBOARD_NAME
+    default "TOTEM"
+
+config ZMK_SPLIT_ROLE_CENTRAL
+    default y
+
+endif
+
 if SHIELD_TOTEM_LEFT || SHIELD_TOTEM_RIGHT || SHIELD_TOTEM_DONGLE
 
 config ZMK_SPLIT
