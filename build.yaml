@@ -1,35 +1,47 @@
 include:
-  # ==========================================================================
-  #  WIRELESS MODE  -  no dongle / Prospector running in battery scanner mode.
-  #  Left half is the BLE split CENTRAL (host-facing); right half is peripheral.
-  #  Flash totem_left_central + totem_right_peripheral onto the two halves.
-  # ==========================================================================
+  # ============================================================================
+  #  TOTEM + Prospector Touch — build-time dual mode.
+  #
+  #  ZMK split central/peripheral role is fixed at COMPILE TIME (set before the
+  #  BLE stack starts); there is no runtime central<->peripheral swap. So the
+  #  left half ships as two images and you flash the set that matches how you
+  #  run the keyboard. Run settings_reset on every device before switching
+  #  modes so the halves re-bond to the new central.
+  #
+  #  WIRELESS (no dongle): left = split CENTRAL (host-facing), right = peripheral.
+  #    left  half  <- totem_left_central_wireless
+  #    right half  <- totem_right_peripheral
+  #
+  #  DONGLE (Prospector on USB): the Prospector is the BLE central + USB HID and
+  #  BOTH halves are peripherals. The Prospector display only runs in this mode.
+  #    left  half  <- totem_left_peripheral_dongle
+  #    right half  <- totem_right_peripheral        (same image as wireless)
+  #    Prospector  <- totem_dongle_prospector
+  # ============================================================================
+
+  # --- WIRELESS: left half = split central ------------------------------------
   - board: xiao_ble/nrf52840/zmk
     shield: totem_left
     artifact-name: totem_left_central_wireless
+
+  # --- shared: right half = peripheral (identical in both modes) --------------
   - board: xiao_ble/nrf52840/zmk
     shield: totem_right
     artifact-name: totem_right_peripheral
 
-  # ==========================================================================
-  #  DONGLE MODE  -  Prospector running in USB dongle mode (it is the central).
-  #  BOTH halves are peripherals; the Prospector dongle is the BLE central +
-  #  USB HID. The cmake-arg overrides the left half's default central role.
-  #  Flash totem_left_peripheral + totem_right_peripheral + the dongle image.
-  # ==========================================================================
+  # --- DONGLE: left half forced to peripheral (overrides its defconfig central)
   - board: xiao_ble/nrf52840/zmk
     shield: totem_left
     cmake-args: -DCONFIG_ZMK_SPLIT_ROLE_CENTRAL=n
     artifact-name: totem_left_peripheral_dongle
+
+  # --- DONGLE: Prospector = split central + USB HID + ZMK Studio --------------
+  #  Studio is enabled in totem_dongle.conf; the snippet supplies the USB RPC.
   - board: xiao_ble/nrf52840/zmk
     shield: totem_dongle prospector_touch
     snippet: studio-rpc-usb-uart
-    cmake-args: -DCONFIG_ZMK_STUDIO=y
     artifact-name: totem_dongle_prospector
 
-  # ==========================================================================
-  #  Pairing reset  -  flash on every device before switching modes so the
-  #  halves can re-bond to the new central.
-  # ==========================================================================
+  # --- pairing reset: flash on every device before switching modes ------------
   - board: xiao_ble/nrf52840/zmk
     shield: settings_reset
